@@ -5,7 +5,7 @@ export async function fetchApi(
   options?: RequestInit,
 ): Promise<any> {
   const url = `${baseUrl}${endpoint}`;
-
+console.log('rrrrrrl',url)
   try {
     const response = await fetch(url, {
       ...options,
@@ -14,8 +14,9 @@ export async function fetchApi(
         ...options?.headers,
       },
     });
+    console.log('ressss',await response.json())
     const status = response.status >= 200 && response.status < 300 ? 'success' : 'error';
-    return {status,data: await response.json()};
+    return {status,data: response};
   } catch (error) {
     console.error('Fetch error:', error);
     throw error;
