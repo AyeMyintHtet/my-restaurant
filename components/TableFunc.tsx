@@ -6,7 +6,7 @@ import { buffetTable } from "@/types/supabase_db.types"; // Adjust the import pa
 import buffetTableAction from "@/actions/tableAction";
 import { useRouter } from "next/navigation";
 interface TableFuncProps {
-  item: buffetTable;
+  item: any;
 }
 const TableFunc = ({ item }: TableFuncProps) => {
 

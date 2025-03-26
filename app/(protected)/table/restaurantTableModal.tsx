@@ -1,9 +1,7 @@
 'use client'
-import { submitForm } from '@/actions/loginAction';
 import buffetTableAction from '@/actions/tableAction';
 import ModalCom from '@/components/Modal';
 import { buffetTable } from '@/types/supabase_db.types';
-import { useRouter } from 'next/navigation';
 import React, { useActionState, useEffect } from 'react'
 import { useFormStatus } from 'react-dom';
 
@@ -71,7 +69,6 @@ const RestaurantTableModal = ({open,setOpen,callApi,editData}:IRestaurantTableMo
       :  buffetTableAction.addBuffetTable;
   
     const [state, formAction] = useActionState(action, null);
-  console.log('state', state?.error);
     useEffect(() => {
       if (state?.message === 'success') {
         setOpen(false);

@@ -6,7 +6,7 @@ export interface buffetTable{
     max_customer: string;
     is_used: boolean;
 }
-export interface Customer {
+export interface customerTable {
     id: number;
     created_at: Date;
     table_id: number;
@@ -14,12 +14,12 @@ export interface Customer {
     customer_count: number;
     
 }
-export interface menuCategory {
+export interface menuCategoryTable {
     id: number;
     name: string
 }
 
-export interface menuItem {
+export interface menuItemTable {
     id: number;
     name: string;
     tier_id: number;
@@ -28,12 +28,14 @@ export interface menuItem {
     available_amt: number;
     created_at: string;
 }
-export interface otherInfo{
+export interface otherInfoTable{
     id:number;
     time_limit: string;
 }
-export interface tierList{
+export interface tierListTable{
     id: number;
     name : string;
     amount: number;
 }
+
+export type IDatabases = 'buffet_table' | 'customer' | 'menu_category' | 'menu_item' | 'other_info' | 'tier_list';
