@@ -98,9 +98,6 @@ const RestaurantTableModal = ({open,setOpen,callApi,editData}:IRestaurantTableMo
     );
   };
 
-
-
-
   return (
     <ModalCom open={open} setOpen={setOpen} title={`${isEdit ? 'Edit' : 'Add'} Table`} body={<ModalBody/>}/>
   )

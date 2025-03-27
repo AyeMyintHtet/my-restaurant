@@ -30,7 +30,8 @@ export interface menuItemTable {
 }
 export interface otherInfoTable{
     id:number;
-    time_limit: string;
+    name: string;
+    value:string;
 }
 export interface tierListTable{
     id: number;

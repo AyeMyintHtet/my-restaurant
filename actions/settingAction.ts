@@ -55,7 +55,7 @@ const settingAction = {
   async addTable(prevState: any, formData: FormData) {
     try {
       const { table_name, ...data } = Object.fromEntries(formData.entries());
-      console.log(data);
+      return console.log(data,table_name);
       const response = await fetchApi(`/api/setting?table_name=${table_name}`, {
         method: "POST",
         body: JSON.stringify(data),

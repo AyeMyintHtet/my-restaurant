@@ -5,11 +5,12 @@ interface IButton {
   variant: "contained" | "outlined" | "text";
   text: string;
   icon?: React.ReactNode;
+  className?: string;
   onClick?: () => void;
 }
-const ButtonCom = ({ variant, icon, text ,onClick}: IButton) => {
+const ButtonCom = ({ variant, icon, text ,className,onClick}: IButton) => {
   return (
-    <Button variant={variant} endIcon={icon} onClick={onClick}>
+    <Button variant={variant} endIcon={icon} onClick={onClick} className={className}>
       {text}
     </Button>
   );
