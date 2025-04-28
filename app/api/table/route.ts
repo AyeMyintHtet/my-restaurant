@@ -33,7 +33,7 @@ export async function PATCH(req: NextRequest) {
         { status: 400 }
       );
     }
-
+    console.log('body', updates);
     const { data, error } = await supabase
       .from("buffet_table")
       .update(updates)

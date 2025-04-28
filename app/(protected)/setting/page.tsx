@@ -23,13 +23,13 @@ const timeLimitHeader = ["ID", "Time Limit", ""];
 const Setting = () => {
   const [tierListData, setTierListData] = useState<tierListTable[]>([]);
   const [timeLimitData, setTimeLimitData] = useState<otherInfoTable[]>();
-  const [menuCategoryData, setMenuCategoryData] =
-    useState<menuCategoryTable[]>();
+  const [menuCategoryData, setMenuCategoryData] = useState<menuCategoryTable[]>();
   const [open, setIsOpen] = useState(false);
   const [modalData, setModalData] = useState<ModalFormData>({
     table: "",
     data: [],
   });
+  const [isTableLoading, setIsTableLoading] = useState([true,true,true]);
 
   useEffect(() => {
     fetchTableData();
@@ -43,6 +43,20 @@ const Setting = () => {
     onEdit: (data) => {
       // setEditData(data);
       // setIsShowModal(true);
+      console.log('data',data)
+      const obj = [{
+        inputid: "name",
+        name: "Name",
+        value: data.name,
+      },
+      {
+        inputid: "amount",
+        name: "Amount",
+        value: data.amount,
+      }
+    ]
+    editTable("tier_list",obj, data.id,fetchTierList)
+
     },
   });
 
@@ -59,7 +73,7 @@ const Setting = () => {
         value: data.name,
       }]
       console.log('data',data)
-      editTable('menu_category',obj, data.id)
+      editTable('menu_category',obj, data.id,fetchMenuCategory)
     },
   });
 
@@ -80,19 +94,49 @@ const Setting = () => {
   });
 
   const fetchTierList = async () => {
+    setIsTableLoading((prev) => {
+      const newState = [...prev];
+      newState[0] = true;
+      return newState;
+    })
     const res = await settingAction.getTableList("tier_list");
     setTierListData(res);
+    setIsTableLoading((prev) => {
+      const newState = [...prev];
+      newState[0] = false;
+      return newState;
+    });
   };
 
   const fetchMenuCategory = async () => {
+    setIsTableLoading((prev) => {
+      const newState = [...prev];
+      newState[1] = true;
+      return newState;
+    });
     const res = await settingAction.getTableList("menu_category");
     setMenuCategoryData(res);
+    setIsTableLoading((prev) => {
+      const newState = [...prev];
+      newState[1] = false;
+      return newState;
+    });
   };
   const fetchTimeLimit = async () => {
+    setIsTableLoading((prev) => {
+      const newState = [...prev];
+      newState[2] = true;
+      return newState;
+    });
     const res = await settingAction.getTableList("other_info");
     setTimeLimitData(
       res?.filter((item: otherInfoTable) => item.name === "time_limit")
     );
+    setIsTableLoading((prev) => {
+      const newState = [...prev];
+      newState[2] = false;
+      return newState;
+    });
   };
 
   async function fetchTableData() {
@@ -167,13 +211,13 @@ const Setting = () => {
     setIsOpen(true);
   };
 
-  function editTable(tableName: IDatabases , data: Array<any>, EditId: number){
+  function editTable(tableName: IDatabases , data: Array<any>, EditId: number, callTable: () => void) {
     console.log('data',data)
     setModalData({
       EditId,
       table: tableName,
       data: data,
-      callApi: async ()=> [await fetchTableData(), setIsOpen(false)]
+      callApi: async ()=> [await callTable(), setIsOpen(false)]
     });
     setIsOpen(true);
   }
@@ -193,9 +237,10 @@ const Setting = () => {
               />
             </div>
             <BasicTable
-              header={tierListHeader}
               className="tier-list mb-10"
               data={tierListBody}
+              header={tierListHeader}
+              isLoading={isTableLoading[0]}
             />
             <hr />
           </Grid>
@@ -215,6 +260,7 @@ const Setting = () => {
             <BasicTable
               header={menuCategoryHeader}
               className="menu-category-list mb-10"
+              isLoading={isTableLoading[1]}
               data={menuCategoryBody}
             />
             <hr />
@@ -234,6 +280,7 @@ const Setting = () => {
             <BasicTable
               header={timeLimitHeader}
               className="time-limit-list mb-10"
+              isLoading={isTableLoading[2]}
               data={timeLimitBody}
             />
             <hr />

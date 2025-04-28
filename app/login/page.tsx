@@ -53,7 +53,7 @@ const LoginForm = () => {
   const router = useRouter()
   useEffect(()=>{
     if(state?.status === 'success'){
-      router.push('/')
+      window.location.reload()
     }
   },[state,router])
   return (

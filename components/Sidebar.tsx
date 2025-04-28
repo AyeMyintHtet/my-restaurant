@@ -1,9 +1,10 @@
 'use client'
 import { useState } from "react";
 import { Drawer, List, ListItem, ListItemIcon, ListItemText, IconButton } from "@mui/material";
-import { Home, Settings, People, Menu,TableBar } from "@mui/icons-material";
+import { Home, Settings, People, Menu,TableBar,LogoutRounded } from "@mui/icons-material";
 import FastfoodIcon from '@mui/icons-material/Fastfood';
 import { usePathname, useRouter } from "next/navigation";
+import { createClient } from "@/utils/supabase/client";
 
 const Sidebar = () => {
   const [open, setOpen] = useState(true);
@@ -15,6 +16,11 @@ const Sidebar = () => {
     { text: "Food Menu", icon: <FastfoodIcon />, link: '/food-menu' },
     { text: "Setting", icon: <Settings />, link: '/setting' },
   ]
+  const Logout = async () => {
+     const supabase  = await createClient();
+     await supabase.auth.signOut()
+     window.location.reload()
+  }
   return (
     <div style={{ display: "flex" }}>
       {/* Sidebar */}
@@ -40,6 +46,10 @@ const Sidebar = () => {
               {open && <ListItemText primary={item.text} />}
             </ListItem>
           ))}
+           <ListItem component="li"  style={{minHeight:'48px', cursor:'pointer'}} onClick={()=> Logout()}>
+              <ListItemIcon style={{minWidth: open ? '56px':'auto'}}><LogoutRounded/></ListItemIcon>
+              {open && <ListItemText primary={'Logout'} />}
+            </ListItem>
         </List>
       </Drawer>
 

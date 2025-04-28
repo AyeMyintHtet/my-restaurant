@@ -24,14 +24,15 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const data = await getUser()
+  const {user}= await getUser()
+  
   return (
     <html lang="en" suppressHydrationWarning >
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <div className="flex">
-        {data.user?.user?.email && <Sidebar/>}
+        {user?.email && <Sidebar/>}
         <div className="w-full pr-10">
         {children}
         </div>

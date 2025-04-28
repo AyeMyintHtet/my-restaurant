@@ -1,6 +1,6 @@
 import settingAction from "@/actions/settingAction";
 import ModalCom from "@/components/Modal";
-import React, { useActionState } from "react";
+import React, { useActionState, useEffect } from "react";
 import { useFormStatus } from "react-dom";
 
 export interface FormField {
@@ -71,9 +71,12 @@ const SettingTableModel = ({
     const action = isEdit ? settingAction.updateTable : settingAction.addTable;
 
     const [state, formAction] = useActionState(action, null);
-    if(state?.message === 'success'){
-      renderField.callApi?.();
-    }
+
+    useEffect(() => {
+      if(state?.message === 'success'){
+        renderField.callApi?.();
+      }
+    },[state])
     return (
       <form action={formAction}>
         <Form renderField={renderField} />

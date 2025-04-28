@@ -9,16 +9,19 @@ import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import { buffetTable } from "@/types/supabase_db.types";
 import { Delete, Edit } from "@mui/icons-material";
+import { IconButton } from "@mui/material";
 
 
 export default function BasicTable({
   data,
   header,
   className,
+  isLoading,
 }: {
   data: any;
   header: string[];
   className?: string;
+  isLoading?: boolean;
 }) {
   return (
     <TableContainer component={Paper} className={className}>
@@ -33,10 +36,10 @@ export default function BasicTable({
           </TableRow>
         </TableHead>
         <TableBody>
-          {data === null ? (
+          {data === null || isLoading ? (
             <TableRow>
               <TableCell colSpan={header.length} align="center">
-                ...Loading
+                <IconButton loading={isLoading} />
               </TableCell>
             </TableRow>
           ): data?.length > 0 ? (

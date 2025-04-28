@@ -3,12 +3,14 @@ import React from 'react'
 
 
 export default async function Dashboard(){
- const data = await getUser()
+  const {user}= await getUser()
+
 
   return (
     <div>Dashboard
       <br />
-      {data.user?.user?.email}
+      {user?.email}
+
     </div>
   )
 }

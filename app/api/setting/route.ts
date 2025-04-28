@@ -51,11 +51,13 @@ export async function PATCH(req:NextRequest){
   try {
     const supabase = await createClient();
     const table_name = req.nextUrl.searchParams.get("table_name");
-    const {id, ...body} = await req.json();
+    const {id, ...props} = await req.json();
     if (!table_name) {
       return NextResponse.json({ error: "Invalid request" }, { status: 400 });
     }
-    const { data, error } = await supabase.from(table_name).update(body).match({id});
+    const updates = props.updates;
+    console.log('body', updates);
+    const { data, error } = await supabase.from(table_name).update(updates).match({id});
     console.log('error', error)
     if (error) {
       return NextResponse.json({ error: error.message }, { status: 500 });
