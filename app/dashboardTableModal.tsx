@@ -19,6 +19,7 @@ interface IRestaurantTableModal {
   callApi: React.Dispatch<React.SetStateAction<boolean>>;
   tierListData: tierListTable[];
   tableNumberList: buffetTable[];
+  rawBuffetTable: customerTable[] | null;
   editData?: Partial<customerTable> | null;
 }
 const DashboardTableModel = ({
@@ -28,10 +29,18 @@ const DashboardTableModel = ({
   editData,
   tierListData,
   tableNumberList,
+  rawBuffetTable,
 }: IRestaurantTableModal) => {
   const isEdit = !!editData;
   const Form = ({ defaultValues }: { defaultValues: any }) => {
     const { pending } = useFormStatus();
+     const tableList = !isEdit ? tableNumberList
+              .filter((tableItem) => {
+                return !rawBuffetTable?.some(
+                  (buffetItem) => buffetItem.table_id === tableItem.id && buffetItem.paid === false
+                );
+              })
+              : tableNumberList;
     return (
       <>
         {isEdit && <input type="hidden" name="id" value={defaultValues.id} />}
@@ -53,14 +62,15 @@ const DashboardTableModel = ({
             <option value="-" disabled>
               Select a Table
             </option>
-            {tableNumberList.map((d: buffetTable) => (
-              <option key={d.id} value={d.id}>
-                {d.table_no}
-              </option>
-            ))}
+            {
+              tableList.map((d: buffetTable) => (
+                <option key={d.id} value={d.id}>
+                  {d.table_no}
+                </option>
+              ))}
           </select>
         </div>
-        
+
         <div className="mb-4">
           <label
             htmlFor="customer_count"
@@ -78,7 +88,6 @@ const DashboardTableModel = ({
             autoComplete="off"
           />
         </div>
-
 
         <div className="mb-4">
           <label
@@ -124,7 +133,6 @@ const DashboardTableModel = ({
 
     const [state, formAction] = useActionState(action, null);
     useEffect(() => {
-      console.log("state", state);
       if (state?.message === "success") {
         console.log("success");
         setOpen(false);

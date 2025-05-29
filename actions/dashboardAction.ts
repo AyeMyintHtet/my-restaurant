@@ -35,7 +35,8 @@ const dashboardAction = {
       if (!response.ok) {
         throw new Error(`HTTP error! Status: ${response.status}`);
       }
-      return { message: "success", data: await response.json() };
+      const res = await response.json()
+      return { message: "success", data: {...res,from:'create'}};
     } catch (error) {
       console.error("Error adding buffet table:", error);
       return { error: "Something went wrong", hint: "Something went wrong" };
@@ -60,6 +61,24 @@ const dashboardAction = {
       return { error: "Something went wrong", hint: "Something went wrong" };
     }
   },
+  async changePaidStatusTable(id:number){
+    try {
+      const response = await fetchApi(`/api/dashboard`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({id, paid: true }),
+      });
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+      return { message: "success", data: await response.json() };
+    } catch (error) {
+      console.error("Error updating buffet table:", error);
+      return { error: "Something went wrong", hint: "Something went wrong" };
+    }
+  }
 };
 
 export default dashboardAction;

@@ -42,7 +42,9 @@ export default function Dashboard() {
   const [timeLimit, setTimeLimit] = useState<[Number, Number]>([0, 0]);
   const [getTableId, setGetTableId] = useState<string | null>(null);
   const [tableNumberList, setTableNumberList] = useState<buffetTable[]>([]);
-  const [rawtableNumberList, setRawTableNumberList] = useState<buffetTable[]>([]);
+  const [rawtableNumberList, setRawTableNumberList] = useState<buffetTable[]>(
+    []
+  );
 
   const [buffetReceiptData, setBuffetReceiptData] = useState<ReceiptData>({});
   const [tierListData, setTierListData] = useState<tierListTable[]>([]);
@@ -76,10 +78,11 @@ export default function Dashboard() {
     fetchTierList();
   }, []);
   useEffect(() => {
-    window.addEventListener("click", (e) => {
+    window.addEventListener("click", async(e) => {
       const target = e.target as HTMLElement;
       if (target.classList.contains("checkout")) {
         console.log("Print button clicked");
+        console.log(target);
         const tableId = target.id;
         console.log(tableId);
         console.log(buffetTable);
@@ -104,8 +107,10 @@ export default function Dashboard() {
             time: new Date().toLocaleString(),
           });
           setTimeout(() => {
-            receiptRef.current?.handlePrint();
+            receiptRef.current?.handlePrint()
           }, 100);
+          await dashboardAction.changePaidStatusTable(selectedTable.id)
+          await fetchCustomerTable()
         }
       }
     });
@@ -157,21 +162,28 @@ export default function Dashboard() {
           ,
           item.paid ? "Paid" : "Pending",
           <TableFunc key={id} item={item} />,
-          <Button
-            variant="contained"
-            id={item.id.toString()}
-            className="checkout"
+          item.paid ? <Button
+            variant="outlined"
+            className="pointer-events-none"
           >
-            Print
-          </Button>,
+            Printed
+          </Button>:
+          <Button
+          variant="contained"
+          id={item.id.toString()}
+          className="checkout"
+        >
+          Print
+        </Button>
+          ,
         ];
       })
     );
   }, [buffetTable]);
 
-  useTableEventDelegation('.dashboard-menu-table', buffetTable, {
+  useTableEventDelegation(".dashboard-menu-table", buffetTable, {
     onEdit: (data) => {
-      console.log(data, 'data');
+      console.log(data, "data");
       setEditData({
         ...data,
         table_id: data.buffet_table.id,
@@ -179,7 +191,7 @@ export default function Dashboard() {
       });
       setIsShowModal(true);
     },
-  })
+  });
   return (
     <>
       Dashboard
@@ -210,11 +222,9 @@ export default function Dashboard() {
         callApi={fetchCustomerTable}
         tierListData={tierListData}
         tableNumberList={rawtableNumberList}
-        editData={editData||null} // Pass null or appropriate data if editing
+        rawBuffetTable={rawBuffetTable}
+        editData={editData || null} // Pass null or appropriate data if editing
       />
     </>
   );
 }
-// .filter(tableItem => {
-//   return !rawBuffetTable?.some(buffetItem => buffetItem.table_id === tableItem.id);
-// })

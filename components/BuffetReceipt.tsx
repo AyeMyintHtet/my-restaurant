@@ -1,6 +1,7 @@
 import React, { forwardRef, useImperativeHandle, useRef } from 'react';
 import { Box, Typography, Divider, Grid, Button } from '@mui/material';
 import { useReactToPrint } from 'react-to-print';
+import {QRCodeSVG} from 'qrcode.react';
 
 export type ReceiptData = {
     menuTier?:string,
@@ -9,6 +10,7 @@ export type ReceiptData = {
     customerCount?:string,
     cost?:string,
     time?: string
+    qrCode?: string
 };
 type BuffetReceiptProps = {
     data:ReceiptData
@@ -46,6 +48,13 @@ const BuffetReceiptContent = React.forwardRef<HTMLDivElement, BuffetReceiptProps
         <Typography variant="body2" align="center" gutterBottom>
           {data.time}
         </Typography>
+        <Divider sx={{ mb: 2 }} />
+        <div className='flex justify-center mb-2'>
+        
+          <QRCodeSVG value={`${'window.location.host'}/`} />
+        
+        </div>        
+
         <Divider sx={{ mb: 2 }} />
 
         <Grid container spacing={2}>
