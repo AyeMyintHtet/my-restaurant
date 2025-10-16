@@ -48,12 +48,18 @@ const BuffetReceiptContent = React.forwardRef<HTMLDivElement, BuffetReceiptProps
         <Typography variant="body2" align="center" gutterBottom>
           {data.time}
         </Typography>
+        {
+          data.qrCode &&
+        <>
         <Divider sx={{ mb: 2 }} />
+        {data.qrCode}
         <div className='flex justify-center mb-2'>
         
-          <QRCodeSVG value={`${'window.location.host'}/`} />
+          <QRCodeSVG value={data.qrCode} />
         
         </div>        
+        </>
+        }
 
         <Divider sx={{ mb: 2 }} />
 
@@ -69,10 +75,17 @@ const BuffetReceiptContent = React.forwardRef<HTMLDivElement, BuffetReceiptProps
 
           <Grid item xs={6}><Typography variant="body2">Customer Count:</Typography></Grid>
           <Grid item xs={6}><Typography variant="body2">{data.customerCount}</Typography></Grid>
-
+          {
+            data.cost &&
+            <>
           <Grid item xs={6}><Typography variant="body2">Cost:</Typography></Grid>
           <Grid item xs={6}><Typography variant="body2">{data.cost}</Typography></Grid>
+            </>
+          }
         </Grid>
+        {
+          data.cost &&
+          <>
           <Divider sx={{ mt: 2 }} />
           <Grid container spacing={2}>
           <Grid item xs={6}><Typography variant="body2">Taxes:</Typography></Grid>
@@ -82,6 +95,8 @@ const BuffetReceiptContent = React.forwardRef<HTMLDivElement, BuffetReceiptProps
           <Grid item xs={6}><Typography variant="body2">Total:</Typography></Grid>
           <Grid item xs={6}><Typography variant="body2">{ (Number(data.cost) * 1.08).toString()}</Typography></Grid>
           </Grid>
+          </>
+        }
         <Divider sx={{ mt: 2 }} />
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
         <Typography align="center" variant="caption">Thank you for dining with us!</Typography>

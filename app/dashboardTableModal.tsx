@@ -17,6 +17,7 @@ interface IRestaurantTableModal {
   open: boolean;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
   callApi: React.Dispatch<React.SetStateAction<boolean>>;
+  setCreateQrData: React.Dispatch<React.SetStateAction<customerTable | undefined>>;
   tierListData: tierListTable[];
   tableNumberList: buffetTable[];
   rawBuffetTable: customerTable[] | null;
@@ -30,6 +31,7 @@ const DashboardTableModel = ({
   tierListData,
   tableNumberList,
   rawBuffetTable,
+  setCreateQrData
 }: IRestaurantTableModal) => {
   const isEdit = !!editData;
   const Form = ({ defaultValues }: { defaultValues: any }) => {
@@ -134,6 +136,11 @@ const DashboardTableModel = ({
     const [state, formAction] = useActionState(action, null);
     useEffect(() => {
       if (state?.message === "success") {
+        if(state.data.from === 'create'){
+         setCreateQrData(state.data)
+
+        }
+        console.log("state", state.data);
         console.log("success");
         setOpen(false);
         callApi((prev) => !prev);

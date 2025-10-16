@@ -22,6 +22,7 @@ import BuffetReceipt, {
 } from "@/components/BuffetReceipt";
 import DashboardTableModel from "./dashboardTableModal";
 import useTableEventDelegation from "@/hooks/useTableEventDelegation";
+import { encrypt } from "@/utils/encrypt-decrypt";
 
 const tableHeader = [
   "Table No",
@@ -45,7 +46,7 @@ export default function Dashboard() {
   const [rawtableNumberList, setRawTableNumberList] = useState<buffetTable[]>(
     []
   );
-
+  const [createQrData, setCreateQrData] = useState<customerTable | undefined>();
   const [buffetReceiptData, setBuffetReceiptData] = useState<ReceiptData>({});
   const [tierListData, setTierListData] = useState<tierListTable[]>([]);
   const [isShowModal, setIsShowModal] = useState(false);
@@ -71,6 +72,30 @@ export default function Dashboard() {
       setBuffetTable(rawBuffetTable);
     }
   }, [getTableId]);
+
+  useEffect(() => {
+    if (createQrData) {
+      const { tier_id, created_at, table_id, customer_count } = createQrData;
+      const calculatedDate = dayjs(created_at);
+      const tier = tierListData.find((item) => item.id === tier_id);
+      const encrypted = encrypt(`${tier_id+','+created_at.toString()+','+ table_id+','+customer_count}`);
+      console.log("Encrypted Data:", encrypted);
+      setBuffetReceiptData({
+        menuTier: tier?.name,
+        startTime: calculatedDate.format("HH:mm:ss"),
+        endTime: calculatedDate
+          .add(Number(timeLimit[0]), "hour")
+          .add(Number(timeLimit[1]), "minute")
+          .format("HH:mm:ss"),
+        customerCount: customer_count.toString(),
+        time: new Date().toLocaleString(),
+        qrCode: `localhost:3000/menu/${encrypted}`
+      });
+      setTimeout(() => {
+        receiptRef.current?.handlePrint();
+      }, 100);
+    }
+  }, [createQrData]);
   useEffect(() => {
     fetchCustomerTable();
     fetchTimeSetting();
@@ -78,7 +103,7 @@ export default function Dashboard() {
     fetchTierList();
   }, []);
   useEffect(() => {
-    window.addEventListener("click", async(e) => {
+    window.addEventListener("click", async (e) => {
       const target = e.target as HTMLElement;
       if (target.classList.contains("checkout")) {
         console.log("Print button clicked");
@@ -107,10 +132,10 @@ export default function Dashboard() {
             time: new Date().toLocaleString(),
           });
           setTimeout(() => {
-            receiptRef.current?.handlePrint()
+            receiptRef.current?.handlePrint();
           }, 100);
-          await dashboardAction.changePaidStatusTable(selectedTable.id)
-          await fetchCustomerTable()
+          await dashboardAction.changePaidStatusTable(selectedTable.id);
+          await fetchCustomerTable();
         }
       }
     });
@@ -159,23 +184,21 @@ export default function Dashboard() {
             .add(Number(timeLimit[0]), "hour")
             .add(Number(timeLimit[1]), "minute")
             .format("HH:mm:ss"),
-          ,
           item.paid ? "Paid" : "Pending",
           <TableFunc key={id} item={item} />,
-          item.paid ? <Button
-            variant="outlined"
-            className="pointer-events-none"
-          >
-            Printed
-          </Button>:
-          <Button
-          variant="contained"
-          id={item.id.toString()}
-          className="checkout"
-        >
-          Print
-        </Button>
-          ,
+          item.paid ? (
+            <Button variant="outlined" className="pointer-events-none">
+              Printed
+            </Button>
+          ) : (
+            <Button
+              variant="contained"
+              id={item.id.toString()}
+              className="checkout"
+            >
+              Print
+            </Button>
+          ),
         ];
       })
     );
@@ -193,18 +216,18 @@ export default function Dashboard() {
     },
   });
   const archivePrintedReceipts = async () => {
-
     setGetTableId(null);
-    rawBuffetTable && setBuffetTable(rawBuffetTable?.filter((item: customerTable)=> item.paid === false))
-    
-  }
+    rawBuffetTable &&
+      setBuffetTable(
+        rawBuffetTable?.filter((item: customerTable) => item.paid === false)
+      );
+  };
   return (
     <>
       Dashboard
       <BuffetReceipt ref={receiptRef} data={buffetReceiptData} />
-
       <div className="text-right mb-4 mt-2 flex justify-end items-center gap-3">
-      <ButtonCom
+        <ButtonCom
           text="Archive Printed Receipts"
           variant="contained"
           onClick={() => archivePrintedReceipts()}
@@ -232,6 +255,7 @@ export default function Dashboard() {
         open={isShowModal}
         setOpen={setIsShowModal}
         callApi={fetchCustomerTable}
+        setCreateQrData={setCreateQrData}
         tierListData={tierListData}
         tableNumberList={rawtableNumberList}
         rawBuffetTable={rawBuffetTable}

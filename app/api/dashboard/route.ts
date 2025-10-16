@@ -21,6 +21,7 @@ export async function GET(req: NextRequest) {
             )
           `
           )
+          .eq("paid",false)
           .order("created_at", { ascending: true });
     
         if (error) {
