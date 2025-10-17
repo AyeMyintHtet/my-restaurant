@@ -4,7 +4,7 @@ export async function fetchApi(
   endpoint: string,
   options?: RequestInit,
 ): Promise<any> {
-  const url = `${baseUrl}${endpoint}`;
+  const url = `${baseUrl}${endpoint}` ;
   try {
     
     const response = await fetch(url, {
