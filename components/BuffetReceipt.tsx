@@ -52,7 +52,7 @@ const BuffetReceiptContent = React.forwardRef<HTMLDivElement, BuffetReceiptProps
           data.qrCode &&
         <>
         <Divider sx={{ mb: 2 }} />
-        {data.qrCode}
+        {/* {data.qrCode} */}
         <div className='flex justify-center mb-2'>
         
           <QRCodeSVG value={data.qrCode} />
