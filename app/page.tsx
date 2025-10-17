@@ -23,7 +23,6 @@ import BuffetReceipt, {
 import DashboardTableModel from "./dashboardTableModal";
 import useTableEventDelegation from "@/hooks/useTableEventDelegation";
 import { encrypt } from "@/utils/encrypt-decrypt";
-import { QRCodeSVG } from "qrcode.react";
 
 const tableHeader = [
   "Table No",
@@ -252,7 +251,6 @@ export default function Dashboard() {
         className="dashboard-menu-table"
         isLoading={isLoading}
       />
-      <QRCodeSVG value={'https://my-restaurant-pos.vercel.app/'} />
       <DashboardTableModel
         open={isShowModal}
         setOpen={setIsShowModal}
