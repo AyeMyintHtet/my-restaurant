@@ -1,6 +1,5 @@
 'use client'
 import { useEffect } from "react";
-import { buffetTable, customerTable, menuCategoryTable, menuItemTable, otherInfoTable, tierListTable } from "@/types/supabase_db.types";
 
 type Handlers = {
   onDelete?: (id: number) => Promise<void>;

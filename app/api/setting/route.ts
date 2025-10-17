@@ -34,6 +34,7 @@ export async function POST(req:NextRequest){
     const supabase = await createClient();
     const table_name = req.nextUrl.searchParams.get("table_name");
     const body = await req.json();
+    console.log('body received in POST:', body);
     if (!table_name) {
       return NextResponse.json({ error: "Invalid request" }, { status: 400 });
     }
@@ -43,6 +44,7 @@ export async function POST(req:NextRequest){
     }
     return NextResponse.json({ message: "success", data }, { status: 200 });
   } catch (err) {
+    console.log('Error in POST request:', err);
     return NextResponse.json({ error: "Invalid request" }, { status: 400 });
   }
 }

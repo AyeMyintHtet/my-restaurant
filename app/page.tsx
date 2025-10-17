@@ -157,7 +157,7 @@ export default function Dashboard() {
     console.log(res);
     const timeSetting = res.find((item: any) => item.name === "time_limit");
     const time = timeSetting?.value.split(":");
-    setTimeLimit([time[0], time[1]]);
+    time && setTimeLimit([time[0], time[1]]);
   };
   const fetchBuffetTable = async () => {
     const res = await buffetTableAction.getBuffetTableInfo();

@@ -71,6 +71,7 @@ const LoginForm: React.FC = () => {
     <>
       <form action={formAction} className="max-w-md mx-auto mt-10">
         <Form />
+        <p className='text-gray-500 italic'>Email: admin@gmail.com , Password : admin123</p>
        {process.env.NODE_ENV === 'production' && <input type="hidden" name="captchaToken" value={captchaToken ?? ''} />}
         {state?.error && <p className="text-red-500 text-sm mt-2">{state.error}</p>}
       </form>
