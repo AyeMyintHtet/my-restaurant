@@ -1,4 +1,4 @@
-const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
+const baseUrl = window.location.origin || 'http://localhost:3000';
 
 export async function fetchApi(
   endpoint: string,
