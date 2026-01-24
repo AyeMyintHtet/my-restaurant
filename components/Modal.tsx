@@ -17,8 +17,10 @@ const style = {
   left: "50%",
   transform: "translate(-50%, -50%)",
   width: 400,
-  bgcolor: "background.paper",
-  border: "2px solid #000",
+  bgcolor: "var(--surface)", // Use customized surface color
+  color: "var(--foreground)", // Ensure text is visible
+  border: "1px solid rgba(255,255,255,0.1)",
+  borderRadius: "1rem",
   boxShadow: 24,
   p: 4,
 };

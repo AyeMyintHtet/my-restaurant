@@ -22,6 +22,7 @@ export default function Dashboard() {
   const [isShowModal, setIsShowModal] = useState(false);
   const [isCallApi, setIsCallApi] = useState(false);
   const [editData, setEditData] = useState<Partial<buffetTable> | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
@@ -44,46 +45,55 @@ export default function Dashboard() {
   });
 
   async function callApi() {
+    setIsLoading(true);
     const res = await buffetTableAction.getBuffetTableInfo();
     setBuffetTable(res);
+    setIsLoading(false);
   }
 
   const tableBody = useMemo(() => {
-    return (
-      buffetTable !== null &&
-      buffetTable.map((item: buffetTable, id: number) => {
-        return [
-          
-          item.table_no,
-          item.max_customer,
-          item.is_used ? (
-            <p className="text-red-500">Used</p>
-          ) : (
-            <p className="text-green-500">Available</p>
-          ),
-          <TableFunc key={id} item={item} />,
-        ];
-      })
-    );
+    if (!buffetTable) return null;
+    return buffetTable.map((item: buffetTable, id: number) => {
+      return [
+        item.table_no,
+        item.max_customer,
+        item.is_used ? (
+          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400">Used</span>
+        ) : (
+          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-emerald-100 text-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-400">Available</span>
+        ),
+        <TableFunc key={id} item={item} />,
+      ];
+    });
   }, [buffetTable]);
 
   return (
-    <div className="mt-5">
-      <div className="flex w-full flex-col">
-        <div className="text-right mb-4">
+    <div className="p-8 max-w-[1600px] mx-auto space-y-8 min-h-screen">
+      {/* Header Section */}
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b border-slate-700 pb-6">
+        <div>
+          <h1 className="text-3xl font-bold text-white tracking-tight">Table Management</h1>
+          <p className="text-slate-400 mt-1">Configure restaurant tables and capacities</p>
+        </div>
+
+        <div>
           <ButtonCom
             text="Add Table"
             variant="contained"
+            colorType="primary"
             icon={<Add />}
             onClick={() => [setEditData(null), setIsShowModal(true)]}
           />
         </div>
-        <BasicTable
-          data={tableBody}
-          header={buffetTableHeader}
-          className="restaurant-table"
-        />
       </div>
+
+      <BasicTable
+        data={tableBody}
+        header={buffetTableHeader}
+        className="restaurant-table"
+        isLoading={isLoading}
+      />
+
       <RestaurantTableModal
         open={isShowModal}
         setOpen={setIsShowModal}

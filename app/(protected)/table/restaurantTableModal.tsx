@@ -12,7 +12,7 @@ interface IRestaurantTableModal {
   editData?: Partial<buffetTable> | null
 }
 
-const RestaurantTableModal = ({open,setOpen,callApi,editData}:IRestaurantTableModal) => {
+const RestaurantTableModal = ({ open, setOpen, callApi, editData }: IRestaurantTableModal) => {
   const isEdit = !!editData;
   const Form = ({ defaultValues }: { defaultValues: any }) => {
     const { pending } = useFormStatus();
@@ -21,9 +21,9 @@ const RestaurantTableModal = ({open,setOpen,callApi,editData}:IRestaurantTableMo
         {isEdit && (
           <input type="hidden" name="id" value={defaultValues.id} />
         )}
-  
+
         <div className="mb-4">
-          <label htmlFor="table-number" className="block text-sm font-medium text-gray-700">
+          <label htmlFor="table-number" className="block text-sm font-medium text-slate-300">
             Table Number
           </label>
           <input
@@ -31,14 +31,14 @@ const RestaurantTableModal = ({open,setOpen,callApi,editData}:IRestaurantTableMo
             id="table-number"
             name="table_no"
             defaultValue={defaultValues.table_no}
-            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+            className="mt-1 block w-full px-3 py-2 bg-black/50 border border-slate-600 rounded-md text-white shadow-sm focus:outline-none focus:ring-primary focus:border-primary"
             required
             autoComplete="off"
           />
         </div>
-  
+
         <div className="mb-4">
-          <label htmlFor="max-customer" className="block text-sm font-medium text-gray-700">
+          <label htmlFor="max-customer" className="block text-sm font-medium text-slate-300">
             Max Customer
           </label>
           <input
@@ -46,15 +46,15 @@ const RestaurantTableModal = ({open,setOpen,callApi,editData}:IRestaurantTableMo
             id="max-customer"
             name="max_customer"
             defaultValue={defaultValues.max_customer}
-            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+            className="mt-1 block w-full px-3 py-2 bg-black/50 border border-slate-600 rounded-md text-white shadow-sm focus:outline-none focus:ring-primary focus:border-primary"
             required
             autoComplete="off"
           />
         </div>
-  
+
         <button
           type="submit"
-          className="w-full cursor-pointer px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full cursor-pointer px-4 py-3 bg-primary text-primary-foreground font-bold rounded-xl hover:bg-amber-600 transition-all focus:outline-none focus:ring-2 focus:ring-amber-500 shadow-lg shadow-amber-900/20"
           disabled={pending}
         >
           {pending ? 'Submitting...' : isEdit ? 'Update' : 'Add'}
@@ -63,11 +63,11 @@ const RestaurantTableModal = ({open,setOpen,callApi,editData}:IRestaurantTableMo
     );
   };
 
-  const ModalBody =() => {
+  const ModalBody = () => {
     const action = isEdit
-      ?  buffetTableAction.updateBuffetTable
-      :  buffetTableAction.addBuffetTable;
-  
+      ? buffetTableAction.updateBuffetTable
+      : buffetTableAction.addBuffetTable;
+
     const [state, formAction] = useActionState(action, null);
     useEffect(() => {
       if (state?.message === 'success') {
@@ -75,31 +75,31 @@ const RestaurantTableModal = ({open,setOpen,callApi,editData}:IRestaurantTableMo
         callApi((prev) => !prev);
       }
     }, [state]);
-  
+
     return (
       <>
-      <form action={formAction} className="max-w-md mx-auto mt-10">
-        <Form
-          defaultValues={
-            editData || { id: '', table_no: '', max_customer: '' }
-          }
-        />
-        <br />
-        <br />
-              {state?.error && (
-        <div className="mb-4 text-red-600 border border-red-300 rounded p-2 bg-red-50">
-          <p className="font-semibold">{state.error}</p>
-          {state.hint && <p className="text-sm">{state.hint}</p>}
-        </div>
-      )}
-      </form>
+        <form action={formAction} className="max-w-md mx-auto mt-10">
+          <Form
+            defaultValues={
+              editData || { id: '', table_no: '', max_customer: '' }
+            }
+          />
+          <br />
+          <br />
+          {state?.error && (
+            <div className="mb-4 text-red-600 border border-red-300 rounded p-2 bg-red-50">
+              <p className="font-semibold">{state.error}</p>
+              {state.hint && <p className="text-sm">{state.hint}</p>}
+            </div>
+          )}
+        </form>
       </>
 
     );
   };
 
   return (
-    <ModalCom open={open} setOpen={setOpen} title={`${isEdit ? 'Edit' : 'Add'} Table`} body={<ModalBody/>}/>
+    <ModalCom open={open} setOpen={setOpen} title={`${isEdit ? 'Edit' : 'Add'} Table`} body={<ModalBody />} />
   )
 }
 

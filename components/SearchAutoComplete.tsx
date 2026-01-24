@@ -5,11 +5,11 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 
 interface SearchAutoCompleteProps {
-    data: any[];
-    setValue : React.Dispatch<React.SetStateAction<any>>;
-    label : string;
+  data: any[];
+  setValue: React.Dispatch<React.SetStateAction<any>>;
+  label: string;
 }
-export default function SearchAutoComplete({data,setValue,label}:SearchAutoCompleteProps) {
+export default function SearchAutoComplete({ data, setValue, label }: SearchAutoCompleteProps) {
   const hint = React.useRef('');
   const [inputValue, setInputValue] = React.useState('');
   return (
@@ -33,7 +33,31 @@ export default function SearchAutoComplete({data,setValue,label}:SearchAutoCompl
       inputValue={inputValue}
       id="combo-box-hint-demo"
       options={data}
-      sx={{ width: 300 }}
+      sx={{
+        width: 300,
+        "& .MuiOutlinedInput-root": {
+          backgroundColor: "var(--surface)",
+          color: "var(--foreground)",
+          "& fieldset": { borderColor: "rgba(255,255,255,0.2)" },
+          "&:hover fieldset": { borderColor: "var(--primary)" },
+          "&.Mui-focused fieldset": { borderColor: "var(--primary)" },
+        },
+        "& .MuiInputLabel-root": { color: "rgba(255,255,255,0.7)" },
+        "& .MuiInputLabel-root.Mui-focused": { color: "var(--primary)" },
+        "& .MuiAutocomplete-popupIndicator": { color: "rgba(255,255,255,0.7)" },
+        "& .MuiAutocomplete-clearIndicator": { color: "rgba(255,255,255,0.7)" }
+      }}
+      ListboxProps={{
+        sx: {
+          backgroundColor: "var(--surface)",
+          color: "var(--foreground)",
+          "& .MuiAutocomplete-option": {
+            "&:hover": { backgroundColor: "rgba(255,255,255,0.1)" },
+            "&[aria-selected='true']": { backgroundColor: "rgba(245, 158, 11, 0.2)" },
+            "&[aria-selected='true']:hover": { backgroundColor: "rgba(245, 158, 11, 0.3)" }
+          }
+        }
+      }}
       renderInput={(params) => {
         return (
           <Box sx={{ position: 'relative' }}>
@@ -46,6 +70,8 @@ export default function SearchAutoComplete({data,setValue,label}:SearchAutoCompl
                 overflow: 'hidden',
                 whiteSpace: 'nowrap',
                 width: 'calc(100% - 75px)', // Adjust based on padding of TextField
+                color: "rgba(255,255,255,0.3)", // Make sure hint is subtle
+                pointerEvents: "none"
               }}
             >
               {hint.current}
@@ -55,7 +81,7 @@ export default function SearchAutoComplete({data,setValue,label}:SearchAutoCompl
               onChange={(event) => {
                 const newValue = event.target.value;
                 setInputValue(newValue);
-                const matchingOption = data.find((option:any) =>
+                const matchingOption = data.find((option: any) =>
                   option.startsWith(newValue),
                 );
 

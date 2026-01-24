@@ -36,13 +36,13 @@ const DashboardTableModel = ({
   const isEdit = !!editData;
   const Form = ({ defaultValues }: { defaultValues: any }) => {
     const { pending } = useFormStatus();
-     const tableList = !isEdit ? tableNumberList
-              .filter((tableItem) => {
-                return !rawBuffetTable?.some(
-                  (buffetItem) => buffetItem.table_id === tableItem.id && buffetItem.paid === false
-                );
-              })
-              : tableNumberList;
+    const tableList = !isEdit ? tableNumberList
+      .filter((tableItem) => {
+        return !rawBuffetTable?.some(
+          (buffetItem) => buffetItem.table_id === tableItem.id && buffetItem.paid === false
+        );
+      })
+      : tableNumberList;
     return (
       <>
         {isEdit && <input type="hidden" name="id" value={defaultValues.id} />}
@@ -50,7 +50,7 @@ const DashboardTableModel = ({
         <div className="mb-4">
           <label
             htmlFor="table_id"
-            className="block text-sm font-medium text-gray-700"
+            className="block text-sm font-medium text-slate-300"
           >
             Table Number
           </label>
@@ -58,7 +58,7 @@ const DashboardTableModel = ({
             id="table_id"
             name="table_id"
             defaultValue={defaultValues.table_id}
-            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+            className="mt-1 block w-full px-3 py-2 bg-black/50 border border-slate-600 rounded-md text-white shadow-sm focus:outline-none focus:ring-primary focus:border-primary"
             required
           >
             <option value="-" disabled>
@@ -76,7 +76,7 @@ const DashboardTableModel = ({
         <div className="mb-4">
           <label
             htmlFor="customer_count"
-            className="block text-sm font-medium text-gray-700"
+            className="block text-sm font-medium text-slate-300"
           >
             Customer Count
           </label>
@@ -85,7 +85,7 @@ const DashboardTableModel = ({
             id="customer_count"
             name="customer_count"
             defaultValue={defaultValues.customer_count}
-            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+            className="mt-1 block w-full px-3 py-2 bg-black/50 border border-slate-600 rounded-md text-white shadow-sm focus:outline-none focus:ring-primary focus:border-primary"
             required
             autoComplete="off"
           />
@@ -94,7 +94,7 @@ const DashboardTableModel = ({
         <div className="mb-4">
           <label
             htmlFor="tier_id"
-            className="block text-sm font-medium text-gray-700"
+            className="block text-sm font-medium text-slate-300"
           >
             Tier List
           </label>
@@ -102,7 +102,7 @@ const DashboardTableModel = ({
             id="tier_id"
             name="tier_id"
             defaultValue={defaultValues.tier_id}
-            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+            className="mt-1 block w-full px-3 py-2 bg-black/50 border border-slate-600 rounded-md text-white shadow-sm focus:outline-none focus:ring-primary focus:border-primary"
             required
           >
             <option value="" disabled>
@@ -118,7 +118,7 @@ const DashboardTableModel = ({
 
         <button
           type="submit"
-          className="w-full cursor-pointer px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full cursor-pointer px-4 py-3 bg-primary text-primary-foreground font-bold rounded-xl hover:bg-amber-600 transition-all focus:outline-none focus:ring-2 focus:ring-amber-500 shadow-lg shadow-amber-900/20"
           disabled={pending}
         >
           {pending ? "Submitting..." : isEdit ? "Update" : "Add"}
@@ -136,8 +136,8 @@ const DashboardTableModel = ({
     const [state, formAction] = useActionState(action, null);
     useEffect(() => {
       if (state?.message === "success") {
-        if(state.data.from === 'create'){
-         setCreateQrData(state.data)
+        if (state.data.from === 'create') {
+          setCreateQrData(state.data)
 
         }
         console.log("state", state.data);

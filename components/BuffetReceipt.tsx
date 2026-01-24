@@ -1,44 +1,52 @@
 import React, { forwardRef, useImperativeHandle, useRef } from 'react';
 import { Box, Typography, Divider, Grid, Button } from '@mui/material';
 import { useReactToPrint } from 'react-to-print';
-import {QRCodeSVG} from 'qrcode.react';
+import { QRCodeSVG } from 'qrcode.react';
 
 export type ReceiptData = {
-    menuTier?:string,
-    startTime?:string,
-    endTime?:string,
-    customerCount?:string,
-    cost?:string,
-    time?: string
-    qrCode?: string
+  menuTier?: string,
+  startTime?: string,
+  endTime?: string,
+  customerCount?: string,
+  cost?: string,
+  time?: string
+  qrCode?: string
 };
 type BuffetReceiptProps = {
-    data:ReceiptData
-    
+  data: ReceiptData
+
 }
 export type BuffetReceiptHandle = {
   handlePrint: () => void;
 };
 const BuffetReceiptContent = React.forwardRef<HTMLDivElement, BuffetReceiptProps>(
-  ({data}, ref) => {
+  ({ data }, ref) => {
 
     return (
-        <Box
+      <Box
         ref={ref}
         sx={{
           position: 'absolute',
           left: '-9999px',
           p: 2,
-          width: '80mm', // or a fixed px like '300px'
+          width: '80mm',
           fontFamily: 'monospace',
+          color: 'black', // Force black text for print
+          backgroundColor: 'white', // Force white background
           '@media print': {
-            position: 'static', 
+            position: 'static',
             left: 0,
             width: '80mm',
             boxShadow: 'none',
             margin: 0,
-            transform: 'scale(2)',
+            transform: 'scale(1)', // Start with scale 1, let user adjust if needed or keep standard
             transformOrigin: 'top left',
+            color: 'black',
+            backgroundColor: 'white',
+            // Ensure all children are black
+            "& *": {
+              color: "black !important"
+            }
           },
         }}
       >
@@ -50,15 +58,15 @@ const BuffetReceiptContent = React.forwardRef<HTMLDivElement, BuffetReceiptProps
         </Typography>
         {
           data.qrCode &&
-        <>
-        <Divider sx={{ mb: 2 }} />
-        {/* {data.qrCode} */}
-        <div className='flex justify-center mb-2'>
-        
-          <QRCodeSVG value={data.qrCode} />
-        
-        </div>        
-        </>
+          <>
+            <Divider sx={{ mb: 2 }} />
+            {/* {data.qrCode} */}
+            <div className='flex justify-center mb-2'>
+
+              <QRCodeSVG value={data.qrCode} />
+
+            </div>
+          </>
         }
 
         <Divider sx={{ mb: 2 }} />
@@ -78,28 +86,28 @@ const BuffetReceiptContent = React.forwardRef<HTMLDivElement, BuffetReceiptProps
           {
             data.cost &&
             <>
-          <Grid item xs={6}><Typography variant="body2">Cost:</Typography></Grid>
-          <Grid item xs={6}><Typography variant="body2">{data.cost}</Typography></Grid>
+              <Grid item xs={6}><Typography variant="body2">Cost:</Typography></Grid>
+              <Grid item xs={6}><Typography variant="body2">{data.cost}</Typography></Grid>
             </>
           }
         </Grid>
         {
           data.cost &&
           <>
-          <Divider sx={{ mt: 2 }} />
-          <Grid container spacing={2}>
-          <Grid item xs={6}><Typography variant="body2">Taxes:</Typography></Grid>
-          <Grid item xs={6}><Typography variant="body2">8%</Typography></Grid>
-          </Grid>
-          <Grid container spacing={2}>
-          <Grid item xs={6}><Typography variant="body2">Total:</Typography></Grid>
-          <Grid item xs={6}><Typography variant="body2">{ (Number(data.cost) * 1.08).toString()}</Typography></Grid>
-          </Grid>
+            <Divider sx={{ mt: 2 }} />
+            <Grid container spacing={2}>
+              <Grid item xs={6}><Typography variant="body2">Taxes:</Typography></Grid>
+              <Grid item xs={6}><Typography variant="body2">8%</Typography></Grid>
+            </Grid>
+            <Grid container spacing={2}>
+              <Grid item xs={6}><Typography variant="body2">Total:</Typography></Grid>
+              <Grid item xs={6}><Typography variant="body2">{(Number(data.cost) * 1.08).toString()}</Typography></Grid>
+            </Grid>
           </>
         }
         <Divider sx={{ mt: 2 }} />
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-        <Typography align="center" variant="caption">Thank you for dining with us!</Typography>
+          <Typography align="center" variant="caption">Thank you for dining with us!</Typography>
         </div>
       </Box>
     );
@@ -108,25 +116,25 @@ const BuffetReceiptContent = React.forwardRef<HTMLDivElement, BuffetReceiptProps
 BuffetReceiptContent.displayName = 'BuffetReceiptContent';
 
 
-const BuffetReceipt = forwardRef<BuffetReceiptHandle, BuffetReceiptProps>(({data}:{data:ReceiptData},ref) => {
-    const contentRef = useRef<HTMLDivElement>(null);
-    const triggerPrint = useReactToPrint({contentRef});
+const BuffetReceipt = forwardRef<BuffetReceiptHandle, BuffetReceiptProps>(({ data }: { data: ReceiptData }, ref) => {
+  const contentRef = useRef<HTMLDivElement>(null);
+  const triggerPrint = useReactToPrint({ contentRef });
 
-    const handlePrint = () => {
-      console.log('Print asdfdsaf');
-        if (contentRef.current) {
-          triggerPrint(); // wrapped with useReactToPrint
-        } else {
-          setTimeout(() => {
-            if (contentRef.current) triggerPrint();
-          }, 100); // small delay
-        }
-      };
-      useImperativeHandle(ref, () => ({
-        handlePrint,
-      }));
+  const handlePrint = () => {
+    console.log('Print asdfdsaf');
+    if (contentRef.current) {
+      triggerPrint(); // wrapped with useReactToPrint
+    } else {
+      setTimeout(() => {
+        if (contentRef.current) triggerPrint();
+      }, 100); // small delay
+    }
+  };
+  useImperativeHandle(ref, () => ({
+    handlePrint,
+  }));
   return (
-      <BuffetReceiptContent ref={contentRef} data={data} />
+    <BuffetReceiptContent ref={contentRef} data={data} />
   );
 });
 

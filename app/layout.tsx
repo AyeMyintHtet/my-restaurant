@@ -18,7 +18,7 @@ export const metadata: Metadata = {
   title: "Buffet POS",
   description: "Buffet POS Application",
   icons: {
-    icon: "/favicon.ico", 
+    icon: "/favicon.ico",
   },
 };
 
@@ -27,18 +27,18 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const {user}= await getUser()
-  
+  const { user } = await getUser()
+
   return (
     <html lang="en" suppressHydrationWarning >
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-background text-foreground overflow-hidden`}
       >
-        <div className="flex">
-        {user?.email && <Sidebar/>}
-        <div className="w-full pr-10">
-        {children}
-        </div>
+        <div className="flex h-screen w-full">
+          {user?.email && <Sidebar />}
+          <main className="flex-1 h-full overflow-y-auto overflow-x-hidden relative">
+            {children}
+          </main>
         </div>
       </body>
     </html>

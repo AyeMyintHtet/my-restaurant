@@ -78,7 +78,7 @@ export default function Dashboard() {
       const { tier_id, created_at, table_id, customer_count } = createQrData;
       const calculatedDate = dayjs(created_at);
       const tier = tierListData.find((item) => item.id === tier_id);
-      const encrypted = encrypt(`${tier_id+','+created_at.toString()+','+ table_id+','+customer_count}`);
+      const encrypted = encrypt(`${tier_id + ',' + created_at.toString() + ',' + table_id + ',' + customer_count}`);
       console.log("Encrypted Data:", encrypted);
       setBuffetReceiptData({
         menuTier: tier?.name,
@@ -140,7 +140,7 @@ export default function Dashboard() {
       }
     });
     return () => {
-      window.removeEventListener("click", () => {});
+      window.removeEventListener("click", () => { });
     };
   }, [buffetTable]);
   const fetchCustomerTable = async () => {
@@ -170,38 +170,35 @@ export default function Dashboard() {
     setTierListData(res);
   };
   const tableBody = useMemo(() => {
-    return (
-      buffetTable !== null &&
-      buffetTable.map((item: customerTable, id: number) => {
-        const calculatedDate = dayjs(item.created_at);
-        // console.log(new Date(calculatedDate.toString()));
-        return [
-          item.buffet_table.table_no,
-          item.customer_count,
-          item.tier_list.name,
-          calculatedDate.format("HH:mm:ss"),
-          calculatedDate
-            .add(Number(timeLimit[0]), "hour")
-            .add(Number(timeLimit[1]), "minute")
-            .format("HH:mm:ss"),
-          item.paid ? "Paid" : "Pending",
-          <TableFunc key={id} item={item} />,
-          item.paid ? (
-            <Button variant="outlined" className="pointer-events-none">
-              Printed
-            </Button>
-          ) : (
-            <Button
-              variant="contained"
-              id={item.id.toString()}
-              className="checkout"
-            >
-              Print
-            </Button>
-          ),
-        ];
-      })
-    );
+    if (!buffetTable) return null;
+    return buffetTable.map((item: customerTable, id: number) => {
+      const calculatedDate = dayjs(item.created_at);
+      return [
+        item.buffet_table.table_no,
+        item.customer_count,
+        item.tier_list.name,
+        calculatedDate.format("HH:mm:ss"),
+        calculatedDate
+          .add(Number(timeLimit[0]), "hour")
+          .add(Number(timeLimit[1]), "minute")
+          .format("HH:mm:ss"),
+        item.paid ? "Paid" : "Pending",
+        <TableFunc key={id} item={item} />,
+        item.paid ? (
+          <Button variant="outlined" className="pointer-events-none">
+            Printed
+          </Button>
+        ) : (
+          <Button
+            variant="contained"
+            id={item.id.toString()}
+            className="checkout"
+          >
+            Print
+          </Button>
+        ),
+      ];
+    });
   }, [buffetTable]);
 
   useTableEventDelegation(".dashboard-menu-table", buffetTable, {
@@ -223,34 +220,46 @@ export default function Dashboard() {
       );
   };
   return (
-    <>
-      Dashboard
+    <div className="p-8 max-w-[1600px] mx-auto space-y-8 min-h-screen">
       <BuffetReceipt ref={receiptRef} data={buffetReceiptData} />
-      <div className="text-right mb-4 mt-2 flex justify-end items-center gap-3">
-        <ButtonCom
-          text="Archive Printed Receipts"
-          variant="contained"
-          onClick={() => archivePrintedReceipts()}
-        />
-        <SearchAutoComplete
-          data={tableNumberList}
-          setValue={setGetTableId}
-          label="Search Table Number"
-        />
-        <ButtonCom
-          text="New Customer"
-          variant="contained"
-          icon={<Add />}
-          onClick={() => [setEditData(null), setIsShowModal(true)]}
-        />
+
+      {/* Header Section */}
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b border-slate-700 pb-6">
+        <div>
+          <h1 className="text-3xl font-bold text-white tracking-tight">Live Dashboard</h1>
+          <p className="text-slate-400 mt-1">Real-time table monitoring and management</p>
+        </div>
+
+        <div className="flex flex-wrap items-center gap-3">
+          <SearchAutoComplete
+            data={tableNumberList}
+            setValue={setGetTableId}
+            label="Search Table"
+          />
+          <ButtonCom
+            text="Archive Prints"
+            variant="outlined"
+            colorType="secondary"
+            onClick={() => archivePrintedReceipts()}
+          />
+          <ButtonCom
+            text="New Order"
+            variant="contained"
+            colorType="primary"
+            icon={<Add />}
+            onClick={() => [setEditData(null), setIsShowModal(true)]}
+          />
+        </div>
       </div>
-      <br />
+
+      {/* Main Table Content */}
       <BasicTable
         data={tableBody}
         header={tableHeader}
         className="dashboard-menu-table"
         isLoading={isLoading}
       />
+
       <DashboardTableModel
         open={isShowModal}
         setOpen={setIsShowModal}
@@ -259,8 +268,8 @@ export default function Dashboard() {
         tierListData={tierListData}
         tableNumberList={rawtableNumberList}
         rawBuffetTable={rawBuffetTable}
-        editData={editData || null} // Pass null or appropriate data if editing
+        editData={editData || null}
       />
-    </>
+    </div>
   );
 }

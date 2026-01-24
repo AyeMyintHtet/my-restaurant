@@ -1,14 +1,14 @@
 
 
-export interface buffetTable{
+export interface buffetTable {
     id: number;
     table_no: number;
-    max_customer: string;
+    max_customer: number;
     is_used: boolean;
 }
 export interface customerTable {
     id: number;
-    created_at: Date;
+    created_at: string;
     table_id: number;
     tier_id: number;
     customer_count: number;
@@ -30,16 +30,16 @@ export interface menuItemTable {
     available_amt: number;
     created_at: string;
 }
-export interface otherInfoTable{
-    id:number;
-    name: string;
-    value:string;
-}
-export interface tierListTable{
+export interface otherInfoTable {
     id: number;
-    name : string;
+    name: string;
+    value: string;
+}
+export interface tierListTable {
+    id: number;
+    name: string;
     amount: number;
-    level:number;
+    level: number;
 }
 
 export type IDatabases = 'buffet_table' | 'customer' | 'menu_category' | 'menu_item' | 'other_info' | 'tier_list';

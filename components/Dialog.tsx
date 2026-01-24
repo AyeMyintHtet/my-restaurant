@@ -31,18 +31,25 @@ const ConfirmationDialog: React.FC<ConfirmationDialogProps> = ({
       onClose={onClose}
       aria-labelledby="alert-dialog-title"
       aria-describedby="alert-dialog-description"
+      PaperProps={{
+        sx: {
+          backgroundColor: "var(--surface)",
+          color: "var(--foreground)",
+          border: "1px solid rgba(255,255,255,0.1)",
+        }
+      }}
     >
-      <DialogTitle id="alert-dialog-title">{title}</DialogTitle>
+      <DialogTitle id="alert-dialog-title" sx={{ color: "var(--primary)" }}>{title}</DialogTitle>
       <DialogContent>
-        <DialogContentText id="alert-dialog-description">
+        <DialogContentText id="alert-dialog-description" sx={{ color: "var(--surface-foreground)" }}>
           {description}
         </DialogContentText>
       </DialogContent>
       <DialogActions>
-        <Button onClick={onClose} color="primary">
+        <Button onClick={onClose} sx={{ color: "rgba(255,255,255,0.5)" }}>
           {cancelButtonText}
         </Button>
-        <Button onClick={onConfirm} color="secondary" autoFocus>
+        <Button onClick={onConfirm} variant="contained" color="warning" autoFocus sx={{ bgcolor: "var(--primary)", color: "var(--primary-foreground)" }}>
           {confirmButtonText}
         </Button>
       </DialogActions>

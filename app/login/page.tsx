@@ -1,94 +1,56 @@
-'use client';
+import React from "react";
+import LoginForm from "./LoginForm";
+import Image from "next/image";
 
-import React, { useActionState, useEffect, useRef, useState } from 'react';
-import { useFormStatus } from 'react-dom';
-import { submitForm } from '@/actions/loginAction'; // Ensure this is typed
-import { useRouter } from 'next/navigation';
-import HCaptcha from '@hcaptcha/react-hcaptcha';
-
-// Define the expected shape of the state returned by submitForm
-type FormState = {
-  status?: 'success' | 'error';
-  error?: string;
-} | null;
-
-const Form: React.FC = () => {
-  const { pending } = useFormStatus();
-
-  return (
-    <>
-      <div className="mb-4">
-        <label htmlFor="email" className="block text-sm font-medium text-gray-700">
-          Email
-        </label>
-        <input
-          type="email"
-          id="email"
-          name="email"
-          className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-          required
-        />
-      </div>
-
-      <div className="mb-4">
-        <label htmlFor="password" className="block text-sm font-medium text-gray-700">
-          Password
-        </label>
-        <input
-          type="password"
-          id="password"
-          name="password" 
-          className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-          required
-        />
-      </div>
-
-      <button
-        type="submit"
-        className="w-full px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
-        disabled={pending}
-      >
-        {pending ? 'Submitting...' : 'Login'}
-      </button>
-    </>
-  );
+export const metadata = {
+  title: "Admin Login | Restaurant POS",
+  description: "Secure admin access",
 };
 
-const LoginForm: React.FC = () => {
-  const [state, formAction] = useActionState(submitForm, null);
-  const [captchaToken, setCaptchaToken] = useState<string | undefined>();
-  const captcha = useRef<HCaptcha>(null);
-  const router = useRouter();
-
-  useEffect(() => {
-    if (state?.status === 'success') {
-      captcha.current?.resetCaptcha();
-      window.location.reload(); // or router.refresh() in Next.js 13+
-    }
-  }, [state, router]);
-
+export default function LoginPage() {
   return (
-    <>
-      <form action={formAction} className="max-w-md mx-auto mt-10">
-        <Form />
-        <p className='text-gray-500 italic'>Email: admin@gmail.com , Password : admin123</p>
-       {process.env.NODE_ENV === 'production' && <input type="hidden" name="captchaToken" value={captchaToken ?? ''} />}
-        {state?.error && <p className="text-red-500 text-sm mt-2">{state.error}</p>}
-      </form>
-      {
-        process.env.NODE_ENV === 'production' && (
+    <div className="min-h-screen flex w-full">
+      {/* Visual Side (Left) - Hidden on Mobile */}
+      <div className="hidden lg:flex w-1/2 relative bg-black items-center justify-center overflow-hidden">
+        <div className="absolute inset-0 z-0">
+          <Image
+            src="/login-bg.png"
+            alt="Restaurant Ambience"
+            fill
+            className="object-cover opacity-60"
+            priority
+          />
+        </div>
+        <div className="relative z-10 p-12 text-white max-w-lg">
+          <h1 className="text-5xl font-bold mb-6 font-display leading-tight">
+            Elevate Your <span className="text-amber-500">Dining</span> Experience
+          </h1>
+          <p className="text-lg text-gray-300 leading-relaxed opacity-90">
+            Manage your restaurant with elegance and efficiency. Access the dashboard to oversee orders, reservations, and analytics.
+          </p>
+        </div>
 
-          <HCaptcha
-            ref={captcha}
-            sitekey={process.env.NEXT_PUBLIC_CAPTCHA_SITE_KEY!}
-            onVerify={(token: string) => {
-              setCaptchaToken(token);
-            }}
-            />
-        )
-      }
-    </>
+        {/* Abstract Overlay Pattern */}
+        <div className="absolute inset-0 bg-gradient-to-br from-black/80 via-transparent to-black/40 pointer-events-none" />
+      </div>
+
+      {/* Functional Side (Right) */}
+      <div className="w-full lg:w-1/2 flex items-center justify-center p-6 bg-neutral-900 relative">
+
+        {/* Mobile Background Fallback */}
+        <div className="absolute inset-0 lg:hidden opacity-20">
+          <Image
+            src="/login-bg.png"
+            alt="Background"
+            fill
+            className="object-cover"
+          />
+        </div>
+
+        <div className="relative z-10 w-full flex justify-center">
+          <LoginForm />
+        </div>
+      </div>
+    </div>
   );
-};
-
-export default LoginForm;
+}
