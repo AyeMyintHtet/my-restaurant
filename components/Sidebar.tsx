@@ -44,7 +44,7 @@ const Sidebar = () => {
       <div className="h-20 flex items-center justify-between px-4 border-b border-slate-700">
         {!collapsed && (
           <h1 className="text-xl font-bold text-primary tracking-wide uppercase">
-            Buffet<span className="text-white">POS</span>
+            Buffet <span className="text-white">POS</span>
           </h1>
         )}
         <button
