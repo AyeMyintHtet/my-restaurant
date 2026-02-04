@@ -13,7 +13,13 @@ export function encrypt(text: string) {
 }
 
 export function decrypt(encryptedData: string) {
-  const [ivHex, authTagHex, encrypted] = encryptedData.split(':');
+  const parts = encryptedData.split('%');
+  console.log('secretKey',secretKey)
+  console.log(parts);
+  if (parts.length !== 3) {
+    throw new Error('Invalid encrypted data format');
+  }
+  const [ivHex, authTagHex, encrypted] = parts;
   const decipher = crypto.createDecipheriv(algorithm, secretKey, Buffer.from(ivHex, 'hex'));
   decipher.setAuthTag(Buffer.from(authTagHex, 'hex'));
   let decrypted = decipher.update(encrypted, 'hex', 'utf8');

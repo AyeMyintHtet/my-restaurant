@@ -56,7 +56,7 @@ const FoodMenu = () => {
           item.name,
           <Image key={id} src={item.image} alt={item.name} width={80} height={80} quality={50} style={{ justifySelf: 'center' }} />,
           item.menu_category.name,
-          item.tier_list.name,
+          item.tier_list?.name,
           item.available_amt,
           <TableFunc key={id} item={item} />,
         ];
@@ -82,7 +82,7 @@ const FoodMenu = () => {
 
   return (
     <div>
-      <div className="text-right mb-4 mt-2">
+      <div className="text-right mb-4 mt-2 ">
         <ButtonCom
           text="Add Menu"
           variant="contained"

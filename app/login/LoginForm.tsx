@@ -13,7 +13,7 @@ const LOGIN_DEFAULT = {
     password: "admin123"
 }
 
-const SubmitButton = () => {
+const SubmitButton = ({ isDisabled }: { isDisabled?: boolean }) => {
     const { pending } = useFormStatus();
 
     return (
@@ -21,8 +21,8 @@ const SubmitButton = () => {
             type="submit"
             fullWidth
             variant="contained"
-            disabled={pending}
-            className={`mt-6 py-3 text-lg font-medium transition-all duration-300 ${pending ? "bg-gray-400" : "bg-gradient-to-r from-amber-500 to-amber-700 hover:from-amber-600 hover:to-amber-800"
+            disabled={pending || isDisabled}
+            className={`mt-6 py-3 text-lg font-medium transition-all duration-300 ${pending || isDisabled ? "bg-gray-400" : "bg-gradient-to-r from-amber-500 to-amber-700 hover:from-amber-600 hover:to-amber-800"
                 }`}
             style={{
                 textTransform: "none",
@@ -119,7 +119,7 @@ export default function LoginForm() {
                     </div>
                 )}
 
-                <SubmitButton />
+                <SubmitButton isDisabled={process.env.NODE_ENV === "production" && !captchaToken} />
 
                 <div className="text-center mt-4">
                     <p className='text-gray-400 text-xs italic'>Default: {LOGIN_DEFAULT.email} / {LOGIN_DEFAULT.password}</p>

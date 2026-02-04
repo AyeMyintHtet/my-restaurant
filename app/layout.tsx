@@ -38,7 +38,7 @@ export default async function RootLayout({
         <QueryProvider>
           <div className="flex h-screen w-full">
             {user?.email && <Sidebar />}
-            <main className="flex-1 h-full overflow-y-auto overflow-x-hidden relative">
+            <main className="mx-3 flex-1 h-full overflow-y-auto overflow-x-hidden relative">
               {children}
             </main>
           </div>

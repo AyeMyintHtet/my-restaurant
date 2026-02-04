@@ -23,7 +23,7 @@ const Sidebar = () => {
 
   const menuItems = [
     { name: "Dashboard", icon: <Dashboard />, path: "/" },
-    { name: "Orders", icon: <Fastfood />, path: "/order" }, // Placeholder path
+    // { name: "Orders", icon: <Fastfood />, path: "/order" }, // Placeholder path
     { name: "Tables", icon: <TableBar />, path: "/table" }, // Placeholder path
     { name: "Menu", icon: <RestaurantMenu />, path: "/menu" }, // Placeholder path
     { name: "Settings", icon: <Settings />, path: "/setting" }, // Placeholder path

@@ -16,6 +16,12 @@ export default {
         port: '',
         pathname: '/**',
       },
+      {
+        protocol: 'https',
+        hostname: 'www.themealdb.com',
+        port: '',
+        pathname: '/**',
+      },
     ],
   }
 }

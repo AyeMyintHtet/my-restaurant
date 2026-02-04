@@ -23,7 +23,7 @@ import BuffetReceipt, {
 } from "@/components/BuffetReceipt";
 import DashboardTableModel from "./dashboardTableModal";
 import useTableEventDelegation from "@/hooks/useTableEventDelegation";
-import { encrypt } from "@/utils/encrypt-decrypt";
+import { decrypt, encrypt } from "@/utils/encrypt-decrypt";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 
 const tableHeader = [
@@ -144,6 +144,8 @@ export default function Dashboard() {
       const tier = tierListData.find((item: tierListTable) => item.id === tier_id);
       const encrypted = encrypt(`${tier_id + ',' + created_at.toString() + ',' + table_id + ',' + customer_count}`);
       console.log("Encrypted Data:", encrypted);
+      console.log("QR Code:", `${window.location.origin}/customer/${encrypted}`);
+      // console.log('decrypted', decrypt(encrypted));
       setBuffetReceiptData({
         menuTier: tier?.name,
         startTime: calculatedDate.format("HH:mm:ss"),
@@ -153,7 +155,7 @@ export default function Dashboard() {
           .format("HH:mm:ss"),
         customerCount: customer_count.toString(),
         time: new Date().toLocaleString(),
-        qrCode: `${window.location.origin}/menu/${encrypted}`
+        qrCode: `${window.location.origin}/customer/${encrypted}`
       });
       setTimeout(() => {
         receiptRef.current?.handlePrint();
